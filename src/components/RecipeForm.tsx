@@ -7,6 +7,7 @@ import {
   CATEGORIES,
   CATEGORY_LABELS,
   DEFAULT_SECTION_NAME,
+  FRACTIONS,
   UNITS,
   type Category,
   type Ingredient,
@@ -177,7 +178,7 @@ export default function RecipeForm({ initial }: Props) {
           </div>
 
           {section.ingredients.map((ing, ii) => (
-            <div key={ii} className="grid grid-cols-[1fr_5rem_5rem_auto] gap-2 items-center">
+            <div key={ii} className="grid grid-cols-[1fr_4.5rem_3.25rem_4.5rem_auto] gap-2 items-center">
               <input
                 placeholder="Ingredient"
                 value={ing.name}
@@ -187,11 +188,26 @@ export default function RecipeForm({ initial }: Props) {
               <input
                 type="number"
                 inputMode="decimal"
+                step="any"
                 min={0}
                 value={ing.quantity}
                 onChange={(e) => updateIng(si, ii, { quantity: parseFloat(e.target.value) || 0 })}
                 className="px-2 py-2 border rounded-md text-right"
               />
+              <select
+                value=""
+                onChange={(e) => {
+                  const v = parseFloat(e.target.value);
+                  if (!Number.isNaN(v)) updateIng(si, ii, { quantity: v });
+                }}
+                className="px-1 py-2 border rounded-md bg-white text-sm"
+                aria-label="Fraction"
+              >
+                <option value="">frac</option>
+                {FRACTIONS.map((f) => (
+                  <option key={f.label} value={f.value}>{f.label}</option>
+                ))}
+              </select>
               <select
                 value={ing.unit}
                 onChange={(e) => updateIng(si, ii, { unit: e.target.value })}
