@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import type { Ingredient, Recipe } from "@/lib/types";
+import type { IngredientSection, Recipe } from "@/lib/types";
 import RecipeScaler from "@/components/RecipeScaler";
 import DeleteRecipeButton from "@/components/DeleteRecipeButton";
 
@@ -11,14 +11,19 @@ export default async function RecipePage({ params }: { params: { id: string } })
   const { data: recipe } = await supabase.from("recipes").select("*").eq("id", params.id).single();
   if (!recipe) notFound();
 
-  const { data: ingredients } = await supabase
-    .from("ingredients")
-    .select("*")
+  const { data: sections } = await supabase
+    .from("ingredient_sections")
+    .select("id, name, position, ingredients(id, name, quantity, unit, position)")
     .eq("recipe_id", params.id)
-    .order("name");
+    .order("position");
 
   const r = recipe as Recipe;
-  const ings = (ingredients ?? []) as Ingredient[];
+  const secs: IngredientSection[] = (sections ?? []).map((s: any) => ({
+    id: s.id,
+    name: s.name,
+    position: s.position,
+    ingredients: (s.ingredients ?? []).sort((a: any, b: any) => (a.position ?? 0) - (b.position ?? 0)),
+  }));
 
   return (
     <div>
@@ -35,7 +40,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       </div>
 
       <div className="mt-6">
-        <RecipeScaler baseWeight={r.base_weight} ingredients={ings} />
+        <RecipeScaler baseWeight={r.base_weight} sections={secs} />
       </div>
     </div>
   );

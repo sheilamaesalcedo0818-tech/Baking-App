@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Ingredient } from "@/lib/types";
+import type { IngredientSection } from "@/lib/types";
 import { scaleIngredients } from "@/lib/scale";
 
 const PRESETS: { label: string; factor: number }[] = [
@@ -14,16 +14,20 @@ const PRESETS: { label: string; factor: number }[] = [
 
 export default function RecipeScaler({
   baseWeight,
-  ingredients,
+  sections,
 }: {
   baseWeight: number;
-  ingredients: Ingredient[];
+  sections: IngredientSection[];
 }) {
   const [target, setTarget] = useState<number>(baseWeight);
 
-  const scaled = useMemo(
-    () => scaleIngredients(ingredients, baseWeight, target),
-    [ingredients, baseWeight, target]
+  const scaledSections = useMemo(
+    () =>
+      sections.map((s) => ({
+        ...s,
+        ingredients: scaleIngredients(s.ingredients, baseWeight, target),
+      })),
+    [sections, baseWeight, target]
   );
 
   const ratio = baseWeight > 0 ? target / baseWeight : 1;
@@ -56,31 +60,42 @@ export default function RecipeScaler({
         </p>
       </div>
 
-      <div className="bg-white border rounded-lg overflow-hidden">
-        <div className="grid grid-cols-[1fr_auto_auto] gap-3 px-4 py-2 text-xs uppercase tracking-wide text-gray-500 border-b">
-          <div>Ingredient</div>
-          <div className="text-right">Original</div>
-          <div className="text-right">Scaled</div>
+      {sections.length === 0 ? (
+        <div className="p-4 bg-white border rounded-lg text-gray-500 text-sm">
+          No ingredients.
         </div>
-        {ingredients.length === 0 ? (
-          <div className="p-4 text-gray-500 text-sm">No ingredients.</div>
-        ) : (
-          ingredients.map((ing, i) => (
-            <div
-              key={ing.id ?? i}
-              className="grid grid-cols-[1fr_auto_auto] gap-3 px-4 py-3 border-b last:border-b-0 items-center"
-            >
-              <div className="font-medium">{ing.name}</div>
-              <div className="text-right text-sm text-gray-500 tabular-nums">
-                {ing.quantity} {ing.unit}
-              </div>
-              <div className="text-right font-mono tabular-nums">
-                {scaled[i].quantity} {ing.unit}
-              </div>
+      ) : (
+        sections.map((section, sIdx) => (
+          <div key={section.id ?? sIdx} className="bg-white border rounded-lg overflow-hidden">
+            <div className="px-4 py-2 border-b bg-gray-50">
+              <h3 className="font-semibold">{section.name}</h3>
             </div>
-          ))
-        )}
-      </div>
+            <div className="grid grid-cols-[1fr_auto_auto] gap-3 px-4 py-2 text-xs uppercase tracking-wide text-gray-500 border-b">
+              <div>Ingredient</div>
+              <div className="text-right">Original</div>
+              <div className="text-right">Scaled</div>
+            </div>
+            {section.ingredients.length === 0 ? (
+              <div className="p-4 text-gray-500 text-sm">No ingredients in this section.</div>
+            ) : (
+              section.ingredients.map((ing, i) => (
+                <div
+                  key={ing.id ?? i}
+                  className="grid grid-cols-[1fr_auto_auto] gap-3 px-4 py-3 border-b last:border-b-0 items-center"
+                >
+                  <div className="font-medium">{ing.name}</div>
+                  <div className="text-right text-sm text-gray-500 tabular-nums">
+                    {ing.quantity} {ing.unit}
+                  </div>
+                  <div className="text-right font-mono tabular-nums">
+                    {scaledSections[sIdx].ingredients[i].quantity} {ing.unit}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 }
