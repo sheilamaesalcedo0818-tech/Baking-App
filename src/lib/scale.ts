@@ -30,9 +30,22 @@ const FRACTION_TABLE: { value: number; label: string }[] = [
   { value: 1 / 2, label: "½" },
   { value: 2 / 3, label: "⅔" },
   { value: 3 / 4, label: "¾" },
-  { value: 7 / 8, label: "⅞" },
   { value: 1, label: "" },
 ];
+
+export function splitQuantity(q: number): { whole: number; fraction: number } {
+  if (!Number.isFinite(q) || q <= 0) return { whole: 0, fraction: 0 };
+  const whole = Math.floor(q);
+  const frac = q - whole;
+  let best = FRACTION_TABLE[0];
+  let bestDiff = Infinity;
+  for (const f of FRACTION_TABLE) {
+    const d = Math.abs(f.value - frac);
+    if (d < bestDiff) { bestDiff = d; best = f; }
+  }
+  if (best.value === 1) return { whole: whole + 1, fraction: 0 };
+  return { whole, fraction: best.value };
+}
 
 function nearestFraction(frac: number): { whole: number; label: string } {
   let best = FRACTION_TABLE[0];

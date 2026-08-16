@@ -37,11 +37,13 @@ export type Recipe = {
 export const UNITS = ["g", "kg", "ml", "l", "tsp", "tbsp", "cup", "can", "pcs"];
 
 export const FRACTIONS: { label: string; value: number }[] = [
-  { label: "¼", value: 0.25 },
+  { label: "—", value: 0 },
+  { label: "⅛", value: 1 / 8 },
+  { label: "¼", value: 1 / 4 },
   { label: "⅓", value: 1 / 3 },
-  { label: "½", value: 0.5 },
+  { label: "½", value: 1 / 2 },
   { label: "⅔", value: 2 / 3 },
-  { label: "¾", value: 0.75 },
+  { label: "¾", value: 3 / 4 },
 ];
 
 export const DEFAULT_SECTION_NAME = "Ingredients";
