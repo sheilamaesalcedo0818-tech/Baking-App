@@ -34,3 +34,8 @@ alter table ingredients enable row level security;
 create policy "anon all recipes" on recipes for all using (true) with check (true);
 create policy "anon all sections" on ingredient_sections for all using (true) with check (true);
 create policy "anon all ingredients" on ingredients for all using (true) with check (true);
+
+-- Grant base table privileges to the anon role (Supabase does not do this by default).
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on recipes, ingredient_sections, ingredients to anon, authenticated;
+grant usage on all sequences in schema public to anon, authenticated;
