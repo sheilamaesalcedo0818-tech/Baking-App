@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { IngredientSection } from "@/lib/types";
-import { scaleIngredients } from "@/lib/scale";
+import { formatQuantity, scaleIngredients } from "@/lib/scale";
 
 const PRESETS: { label: string; factor: number }[] = [
   { label: "½", factor: 0.5 },
@@ -85,10 +85,10 @@ export default function RecipeScaler({
                 >
                   <div className="font-medium">{ing.name}</div>
                   <div className="text-right text-sm text-gray-500 tabular-nums">
-                    {ing.quantity} {ing.unit}
+                    {formatQuantity(ing.quantity, ing.unit)} {ing.unit}
                   </div>
                   <div className="text-right font-mono tabular-nums">
-                    {scaledSections[sIdx].ingredients[i].quantity} {ing.unit}
+                    {formatQuantity(scaledSections[sIdx].ingredients[i].quantity, ing.unit)} {ing.unit}
                   </div>
                 </div>
               ))
