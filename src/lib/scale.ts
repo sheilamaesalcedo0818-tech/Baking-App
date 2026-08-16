@@ -20,7 +20,7 @@ export function round(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
-const WEIGHT_UNITS = new Set(["g", "kg"]);
+const FRACTION_TOLERANCE = 0.02;
 
 const FRACTION_TABLE: { value: number; label: string }[] = [
   { value: 0, label: "" },
@@ -47,25 +47,26 @@ export function splitQuantity(q: number): { whole: number; fraction: number } {
   return { whole, fraction: best.value };
 }
 
-function nearestFraction(frac: number): { whole: number; label: string } {
+function nearestFraction(frac: number): { whole: number; label: string; diff: number } {
   let best = FRACTION_TABLE[0];
   let bestDiff = Infinity;
   for (const f of FRACTION_TABLE) {
     const d = Math.abs(f.value - frac);
     if (d < bestDiff) { bestDiff = d; best = f; }
   }
-  if (best.value === 1) return { whole: 1, label: "" };
-  return { whole: 0, label: best.label };
+  if (best.value === 1) return { whole: 1, label: "", diff: bestDiff };
+  return { whole: 0, label: best.label, diff: bestDiff };
 }
 
-export function formatQuantity(qty: number, unit: string): string {
-  if (WEIGHT_UNITS.has(unit)) return String(round(qty));
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function formatQuantity(qty: number, _unit: string): string {
   if (qty === 0) return "0";
   const sign = qty < 0 ? "-" : "";
   const abs = Math.abs(qty);
   const whole = Math.floor(abs);
   const frac = abs - whole;
-  const { whole: carry, label } = nearestFraction(frac);
+  const { whole: carry, label, diff } = nearestFraction(frac);
+  if (diff > FRACTION_TOLERANCE) return sign + String(round(abs));
   const total = whole + carry;
   if (!label) return sign + String(total);
   if (total === 0) return sign + label;
