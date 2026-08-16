@@ -31,7 +31,7 @@ export default async function RecipePage({ params }: { params: { id: string } })
       <div className="flex justify-between items-start mt-2">
         <div>
           <h1 className="text-2xl font-bold">{r.name}</h1>
-          <p className="text-sm text-gray-500 capitalize">{r.category} · base {r.base_weight} g</p>
+          <p className="text-sm text-gray-500 capitalize">{r.category} · APF {r.base_weight} g</p>
         </div>
         <div className="flex gap-2">
           <Link href={`/recipes/${r.id}/edit`} className="text-sm px-3 py-1.5 rounded-md border">Edit</Link>

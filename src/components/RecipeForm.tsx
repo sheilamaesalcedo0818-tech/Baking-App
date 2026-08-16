@@ -143,7 +143,7 @@ export default function RecipeForm({ initial }: Props) {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Base weight (g)</label>
+          <label className="block text-sm font-medium mb-1">APF (g)</label>
           <input
             type="number"
             inputMode="decimal"

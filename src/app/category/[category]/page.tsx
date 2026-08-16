@@ -33,7 +33,7 @@ export default async function CategoryPage({ params }: { params: { category: str
                 className="flex justify-between items-center p-4 bg-white rounded-lg border hover:shadow-sm"
               >
                 <span className="font-medium">{r.name}</span>
-                <span className="text-sm text-gray-500">{r.base_weight} g</span>
+                <span className="text-sm text-gray-500">APF {r.base_weight} g</span>
               </Link>
             </li>
           ))}

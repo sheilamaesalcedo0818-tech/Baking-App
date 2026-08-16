@@ -35,7 +35,7 @@ export default function RecipeScaler({
   return (
     <div className="space-y-4">
       <div className="p-4 bg-white border rounded-lg">
-        <label className="block text-sm font-medium mb-2">Target weight (g)</label>
+        <label className="block text-sm font-medium mb-2">Target APF (g)</label>
         <input
           type="number"
           inputMode="decimal"
