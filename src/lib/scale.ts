@@ -27,9 +27,12 @@ const FRACTION_TABLE: { value: number; label: string }[] = [
   { value: 1 / 8, label: "⅛" },
   { value: 1 / 4, label: "¼" },
   { value: 1 / 3, label: "⅓" },
+  { value: 3 / 8, label: "⅜" },
   { value: 1 / 2, label: "½" },
+  { value: 5 / 8, label: "⅝" },
   { value: 2 / 3, label: "⅔" },
   { value: 3 / 4, label: "¾" },
+  { value: 7 / 8, label: "⅞" },
   { value: 1, label: "" },
 ];
 
